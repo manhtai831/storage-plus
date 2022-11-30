@@ -26,4 +26,6 @@ abstract class IHiveCurd {
   bool isExist(dynamic key);
 
   IHiveCurd log();
+  
+  IHiveCurd order<T>(Comparator<T> orderBy);
 }

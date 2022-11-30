@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_storage/src/i_hive_curd.dart';
@@ -6,6 +5,7 @@ import 'package:hive_storage/src/name_collection.dart';
 
 class HiveCurdImpl extends IHiveCurd {
   HiveConverter? _converter;
+  Comparator? _orderBy;
   final Box? _collection;
 
   HiveCurdImpl() : _collection = Hive.box(NameCollection.messages);
@@ -98,4 +98,10 @@ class HiveCurdImpl extends IHiveCurd {
 
   @override
   bool isExist(key) => _collection!.containsKey(key);
+
+  @override
+  IHiveCurd order<T>(Comparator<T> orderBy) {
+    _orderBy = orderBy as Comparator?;
+    return this;
+  }
 }
