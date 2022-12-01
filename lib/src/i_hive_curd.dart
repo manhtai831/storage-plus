@@ -7,7 +7,7 @@ abstract class IHiveCurd {
 
   Future<T?> update<T>(dynamic key, dynamic value);
 
-  List<T>? findByPage<T>({int? pageIndex = 0, int? pageSize = 20});
+  List<T>? findByPage<T>({int? pageIndex = 0, int? pageSize = 50});
 
   List<T>? findAll<T>();
 

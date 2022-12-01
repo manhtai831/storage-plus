@@ -4,20 +4,25 @@ import 'package:hive_storage/src/i_hive_curd.dart';
 import 'package:hive_storage/src/name_collection.dart';
 
 class HiveCurdImpl extends IHiveCurd {
+  static final Map<String, Box> _mBoxes = {};
   HiveConverter? _converter;
   Comparator? _orderBy;
   final Box? _collection;
 
-  HiveCurdImpl() : _collection = Hive.box(NameCollection.messages);
-  HiveCurdImpl.msg() : _collection = Hive.box(NameCollection.messages);
-  HiveCurdImpl.group() : _collection = Hive.box(NameCollection.groups);
-  HiveCurdImpl.users() : _collection = Hive.box(NameCollection.users);
+  HiveCurdImpl() : _collection = _mBoxes[NameCollection.messages];
+  HiveCurdImpl.msg() : _collection = _mBoxes[NameCollection.messages];
+  HiveCurdImpl.group() : _collection = _mBoxes[NameCollection.groups];
+  HiveCurdImpl.users() : _collection = _mBoxes[NameCollection.users];
 
-  static Future<void> connect() async {
-    Hive.init('../../local.data');
-    await Hive.openBox(NameCollection.messages);
-    await Hive.openBox(NameCollection.users);
-    await Hive.openBox(NameCollection.groups);
+  Box? get collection => _collection;
+
+  static void connect() => Hive.init('./local.data');
+
+  static Future<void> create({String? name}) async {
+    name ??= 'defaultBoxName';
+    if (_mBoxes.containsKey(name)) return;
+    Box box = await Hive.openBox(name);
+    _mBoxes[name] = box;
   }
 
   static Future<void> close() => Hive.close();
@@ -42,7 +47,8 @@ class HiveCurdImpl extends IHiveCurd {
 
   @override
   List<T>? findAll<T>() {
-    return _converter!.call(_collection!.values) ?? _collection!.values as List<T>?;
+    List<Map<String,dynamic>> mDatas = _collection!.values.map<Map<String,dynamic>>((e) => e.cast<String, dynamic>()).toList();
+    return _converter?.call(mDatas) ?? mDatas;
   }
 
   @override
@@ -51,16 +57,16 @@ class HiveCurdImpl extends IHiveCurd {
     if (data == null) return null;
     return _converter?.call(data) ?? data as T?;
   }
-
+ 
   @override
-  List<T>? findByPage<T>({int? pageIndex = 0, int? pageSize = 20}) {
+  List<T>? findByPage<T>({int? pageIndex = 0, int? pageSize = 50}) {
     if (pageSize! > 50 || pageSize <= 0) pageSize = 50;
     if (pageIndex! < 0) pageIndex = 0;
     int skipCount = pageIndex * pageSize;
     int count = _collection!.values.length;
     if (count < skipCount) return [];
-    var mDatas = _collection!.values.skip(skipCount).take(pageSize).map((e) => e.cast<String, dynamic>()).toList();
-    return _converter!.call(mDatas) ?? mDatas as List<T>?;
+    var mDatas = _collection!.values.skip(skipCount).take(pageSize).map<Map<String,dynamic>>((e) => e.cast<String, dynamic>()).toList();
+    return _converter?.call(mDatas) ?? mDatas;
   }
 
   @override
