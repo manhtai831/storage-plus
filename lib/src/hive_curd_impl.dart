@@ -47,7 +47,7 @@ class HiveCurdImpl extends IHiveCurd {
 
   @override
   List<T>? findAll<T>() {
-    List<Map<String,dynamic>> mDatas = _collection!.values.map<Map<String,dynamic>>((e) => e.cast<String, dynamic>()).toList();
+    List<Map<String, dynamic>> mDatas = _collection!.values.map<Map<String, dynamic>>((e) => e.cast<String, dynamic>()).toList();
     return _converter?.call(mDatas) ?? mDatas;
   }
 
@@ -57,7 +57,7 @@ class HiveCurdImpl extends IHiveCurd {
     if (data == null) return null;
     return _converter?.call(data) ?? data as T?;
   }
- 
+
   @override
   List<T>? findByPage<T>({int? pageIndex = 0, int? pageSize = 50}) {
     if (pageSize! > 50 || pageSize <= 0) pageSize = 50;
@@ -65,7 +65,7 @@ class HiveCurdImpl extends IHiveCurd {
     int skipCount = pageIndex * pageSize;
     int count = _collection!.values.length;
     if (count < skipCount) return [];
-    var mDatas = _collection!.values.skip(skipCount).take(pageSize).map<Map<String,dynamic>>((e) => e.cast<String, dynamic>()).toList();
+    var mDatas = _collection!.values.skip(skipCount).take(pageSize).map<Map<String, dynamic>>((e) => e.cast<String, dynamic>()).toList();
     return _converter?.call(mDatas) ?? mDatas;
   }
 
@@ -110,4 +110,7 @@ class HiveCurdImpl extends IHiveCurd {
     _orderBy = orderBy as Comparator?;
     return this;
   }
+
+  @override
+  int count() => _collection!.length;
 }

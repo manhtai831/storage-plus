@@ -8,6 +8,9 @@ void main() async {
   await HiveCurdImpl.create(name: NameCollection.messages);
   await HiveCurdImpl.create(name: NameCollection.groups);
 
+  test('Insert 1B element', _insert1BElement);
+  test('Count of collection', _countCollection);
+
   test('Chỉ tạo ra 1 box trong tất cả các thời điểm với 1 tên', _onUseMessageBox);
   test('Tạo với key hoặc không key', _onAddByKeyOrNoneKey);
   test('Cập nhật với key', _onUpdateByKey);
@@ -148,7 +151,8 @@ void _onFindAllWithConverter() async {
   for (int i = 0; i < 100; i++) {
     await impl.insert({'id': i}, key: i);
   }
-  List<UserModel>? data = HiveCurdImpl.group().withConverter<List<UserModel>>((json) => json.map<UserModel>((e) => UserModel.fromMap(e)).toList()).findAll();
+  List<UserModel>? data =
+      HiveCurdImpl.group().withConverter<List<UserModel>>((json) => json.map<UserModel>((e) => UserModel.fromMap(e)).toList()).findAll();
   expect(data, isNotNull);
   expect(data.runtimeType, List<UserModel>);
 }
@@ -160,7 +164,8 @@ void _onFindPagingWithConverter() async {
     await impl.insert({'id': i}, key: i);
   }
 
-  List<UserModel>? data = HiveCurdImpl.group().withConverter<List<UserModel>>((json) => json.map<UserModel>((e) => UserModel.fromMap(e)).toList()).findByPage();
+  List<UserModel>? data =
+      HiveCurdImpl.group().withConverter<List<UserModel>>((json) => json.map<UserModel>((e) => UserModel.fromMap(e)).toList()).findByPage();
 
   expect(data, isNotNull);
   expect(data?.length, 50);
@@ -191,4 +196,24 @@ void _onFindLastWithConverter() async {
   expect(data, isNotNull);
   expect(data.runtimeType, UserModel);
   expect(data?.id, 99);
+}
+
+_insert1BElement() async {
+  HiveCurdImpl impl = HiveCurdImpl.group();
+  await impl.removeAll();
+
+  for (int i = 0; i < 100; i++) {
+    await impl.insert({'id': i}, key: i);
+  }
+}
+
+_countCollection() async {
+  HiveCurdImpl impl = HiveCurdImpl.group();
+  await impl.removeAll();
+
+  for (int i = 0; i < 100; i++) {
+    await impl.insert({'id': i}, key: i);
+  }
+  int count = HiveCurdImpl.group().count();
+  expect(count, 100);
 }

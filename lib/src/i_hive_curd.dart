@@ -23,6 +23,8 @@ abstract class IHiveCurd {
 
   int generateId();
 
+  int count();
+
   bool isExist(dynamic key);
 
   IHiveCurd log();
