@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_storage/src/hive_curd_impl.dart';
+import 'package:hive_storage/src/hive/hive_curd_impl.dart';
 import 'package:hive_storage/src/main.dart';
 import 'package:hive_storage/src/name_collection.dart';
 

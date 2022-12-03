@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive_storage/src/i_hive_curd.dart';
 import 'package:hive_storage/src/name_collection.dart';
+
+import 'i_hive_curd.dart';
 
 class HiveCurdImpl extends IHiveCurd {
   static final Map<String, Box> _mBoxes = {};
