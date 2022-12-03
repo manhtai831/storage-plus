@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_storage/src/name_collection.dart';
@@ -7,7 +8,6 @@ import 'i_hive_curd.dart';
 class HiveCurdImpl extends IHiveCurd {
   static final Map<String, Box> _mBoxes = {};
   HiveConverter? _converter;
-  Comparator? _orderBy;
   final Box? _collection;
 
   HiveCurdImpl() : _collection = _mBoxes[NameCollection.messages];
@@ -108,7 +108,6 @@ class HiveCurdImpl extends IHiveCurd {
 
   @override
   IHiveCurd order<T>(Comparator<T> orderBy) {
-    _orderBy = orderBy as Comparator?;
     return this;
   }
 

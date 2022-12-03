@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:hive_storage/src/sqlite/interface/i_sql_group.dart';
@@ -38,7 +39,6 @@ class SqliteCurdImpl implements ISqliteCurd, ISqlWhere, ISqlJoin, ISqlSelect, IS
 
   @override
   Future<T?> findAll<T>() async {
-    if (_limit != null && _offset != null) _rawQuery.write('LIMIT $_offset,$_limit');
     _rawQuery.write('SELECT $_rawSelect FROM $_tableName $_rawWhere');
     List<Map<String, dynamic>> response = await _database!.rawQuery(_rawQuery.toString());
 
@@ -47,7 +47,6 @@ class SqliteCurdImpl implements ISqliteCurd, ISqlWhere, ISqlJoin, ISqlSelect, IS
 
   @override
   Future<T?> findOne<T>() async {
-    _rawQuery.write('LIMIT 1');
     _rawQuery.write('SELECT $_rawSelect FROM $_tableName $_rawWhere');
     List<Map<String, dynamic>> response = await _database!.rawQuery(_rawQuery.toString());
     Map<String, dynamic> object = response.firstOrNull ?? {};
@@ -138,6 +137,7 @@ class SqliteCurdImpl implements ISqliteCurd, ISqlWhere, ISqlJoin, ISqlSelect, IS
   ISqlWhere limit(int limit) {
     _limit = limit;
     if (limit > 50 || limit < 0) limit = 50;
+    if (_limit != null && _offset != null) _rawQuery.write('LIMIT $_offset,$_limit');
     return this;
   }
 
@@ -219,6 +219,12 @@ class SqliteCurdImpl implements ISqliteCurd, ISqlWhere, ISqlJoin, ISqlSelect, IS
   @override
   ISqlGroup having(String condition) {
     _rawSelect.write(' $condition');
+    return this;
+  }
+
+  @override
+  ISqlWhere whereOne() {
+    _rawQuery.write('LIMIT 1,1');
     return this;
   }
 }
