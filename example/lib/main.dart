@@ -79,12 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
     await SqliteCreatorImpl()
         .raw('CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , name TEXT, age INTEGER, is_student INTEGER)')
         .build();
-    // await SqliteCurdImpl().withTable(tableName).setText('name', 'Do Manh Tai').setInteger('age', 18).setBool('is_student', false).insert();
+    await SqliteCurdImpl().withTable(tableName).setText('name', 'Do Manh Tai').setInteger('age', 18).setBool('is_student', false).insert();
    User? response =
-        await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id DESC LIMIT 5,1').withConverter((json) => User.fromMap(json)).findOne();
+        await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id DESC').withConverter((json) => User.fromMap(json)).findOne();
 
     print(response);
-  List<User>? responseMap = await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id ASC LIMIT 5,2').withConverter<List<User>>((json) => json.map<User>((e)=> User.fromMap(e)).toList()).findAll();
+  List<User>? responseMap = await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id ASC').withConverter<List<User>>((json) => json.map<User>((e)=> User.fromMap(e)).toList()).findAll();
       print(responseMap);
   }
 }

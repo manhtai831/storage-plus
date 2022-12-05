@@ -105,11 +105,9 @@ packages:
   hive_storage:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a457de14bc8166a5736497ecec7ef5e98d778fc3
-      url: "https://github.com/manhtai831/storage-plus.git"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   lints:
     dependency: transitive

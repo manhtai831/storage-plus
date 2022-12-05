@@ -46,7 +46,9 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
 
   @override
   Future<void> insert() async {
-    _rawQuery.write('INSERT INTO $_tableName (${_keys.join(', ')}) VALUES (${_values.join(', ')})');
+    String finalRaw = 'INSERT INTO $_tableName (${_keys.join(', ')}) VALUES (${_values.join(', ')})';
+    print(finalRaw);
+    _rawQuery.write(finalRaw);
     _mDatabase.execute(_rawQuery.toString());
   }
 
