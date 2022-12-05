@@ -112,7 +112,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   }
 
   @override
-  ISqliteIU withTable(String tableName) {
+  SqliteCurdImpl withTable(String tableName) {
     _tableName = tableName;
     return this;
   }
