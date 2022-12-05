@@ -1,3 +1,4 @@
+import 'package:example/user.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_storage/hive_storage.dart';
 
@@ -73,29 +74,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _init() async {
-    String databaseName = 'taidm';
     String tableName = 'users';
-    await DatabaseCreatorImpl().connect(name: databaseName);
+    await DatabaseCreatorImpl().connect();
     await SqliteCreatorImpl()
-        .createTable(tableName)
-        .ifNotExsist()
-        .addInteger('id')
-        .notNull()
-        .addPrimaryKey()
-        .and()
-        .addText('name')
-        .and()
-        .addInteger('age')
-        .and()
-        .addBool('is_student')
-        .withDatabase(databaseName: databaseName)
-        .ok()
-        .log()
+        .raw('CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , name TEXT, age INTEGER, is_student INTEGER)')
         .build();
-    await DatabaseCreatorImpl().getDataBase(name: databaseName).execute('INSERT INTO $tableName (name, age, is_student) VALUES (\'Taidm\', 18, 0)');
-    await DatabaseCreatorImpl().getDataBase(name: databaseName).execute('INSERT INTO $tableName (name, age, is_student) VALUES (\'Taidm\', 18, 0)');
-    List response = await DatabaseCreatorImpl().getDataBase(name: databaseName).rawQuery('SELECT * FROM $tableName');
+    // await SqliteCurdImpl().withTable(tableName).setText('name', 'Do Manh Tai').setInteger('age', 18).setBool('is_student', false).insert();
+   User? response =
+        await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id DESC LIMIT 5,1').withConverter((json) => User.fromMap(json)).findOne();
 
     print(response);
+  List<User>? responseMap = await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id ASC LIMIT 5,2').withConverter<List<User>>((json) => json.map<User>((e)=> User.fromMap(e)).toList()).findAll();
+      print(responseMap);
   }
 }

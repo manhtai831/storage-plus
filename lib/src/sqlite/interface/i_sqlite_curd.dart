@@ -2,35 +2,38 @@ import 'package:flutter/services.dart';
 
 typedef SqliteConverter<T> = T Function(dynamic json);
 
-abstract class ISqliteCurd {
-  ISqliteCurd withConverter<T>(SqliteConverter<T> converter);
-
-  ISqliteCurd withTable(String tableName);
-
-  ISqliteCurd withDatabase({String databaseName});
-
-  ISqliteCurd raw(String raw);
-
-  ISqliteCurd setBool(String key, bool? value);
-
-  ISqliteCurd setText(String key, String? value);
-
-  ISqliteCurd setInteger(String key, int? value);
-
-  ISqliteCurd setBlob(String key, Uint8List? value);
-
-  ISqliteCurd setNum(String key, num? value);
-
+abstract class ISqliteRD {
+  ISqliteRD withConverter<T>(SqliteConverter<T> converter);
 
   Future<int> count();
 
-  ISqliteCurd page(int page);
+  Future<void> delete();
 
-  Future<T?> update<T>();
+  Future<T?> findAll<T>();
 
-  Future<T?> insert<T>();
+  Future<T?> findOne<T>();
+}
 
-  Future<T?> delete<T>();
+abstract class ISqliteRaw {
+  ISqliteRaw raw(String raw);
 
+  ISqliteRaw withDatabase({String databaseName});
+}
 
+abstract class ISqliteIU {
+  ISqliteIU withTable(String tableName);
+
+  ISqliteIU setBool(String key, bool? value);
+
+  ISqliteIU setText(String key, String? value);
+
+  ISqliteIU setInteger(String key, int? value);
+
+  ISqliteIU setBlob(String key, Uint8List? value);
+
+  ISqliteIU setNum(String key, num? value);
+
+  Future<void> update();
+
+  Future<void> insert();
 }
