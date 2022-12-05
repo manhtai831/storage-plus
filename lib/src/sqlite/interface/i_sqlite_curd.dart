@@ -36,4 +36,6 @@ abstract class ISqliteIU {
   Future<void> update();
 
   Future<void> insert();
+
+  Future<bool> isExists();
 }

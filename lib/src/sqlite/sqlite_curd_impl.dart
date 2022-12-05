@@ -47,7 +47,6 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   @override
   Future<void> insert() async {
     String finalRaw = 'INSERT INTO $_tableName (${_keys.join(', ')}) VALUES (${_values.join(', ')})';
-    print(finalRaw);
     _rawQuery.write(finalRaw);
     _mDatabase.execute(_rawQuery.toString());
   }
@@ -122,5 +121,13 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
     _rawQuery.write('SELECT COUNT(*) FROM $_tableName');
     List<Map<String, Object?>> response = await _mDatabase.rawQuery(_rawQuery.toString());
     return Sqflite.firstIntValue(response) ?? 0;
+  }
+
+  @override
+  Future<bool> isExists() async {
+    _rawQuery.write(_rawWhere.toString());
+    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString());
+    Map<String, dynamic>? object = response.firstOrNull;
+    return object != null;
   }
 }
