@@ -105,9 +105,11 @@ packages:
   hive_storage:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: a457de14bc8166a5736497ecec7ef5e98d778fc3
+      url: "https://github.com/manhtai831/storage-plus.git"
+    source: git
     version: "0.0.1"
   lints:
     dependency: transitive
@@ -232,7 +234,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   sqflite_common:
     dependency: transitive
     description:
