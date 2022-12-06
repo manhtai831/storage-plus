@@ -1,5 +1,6 @@
 import 'package:example/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_storage/hive_storage.dart';
 
 void main() {
@@ -76,15 +77,38 @@ class _MyHomePageState extends State<MyHomePage> {
   void _init() async {
     String tableName = 'users';
     await DatabaseCreatorImpl().connect();
+    await SqliteCreatorImpl().raw('drop table if exists  $tableName').build();
     await SqliteCreatorImpl()
-        .raw('CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , name TEXT, age INTEGER, is_student INTEGER)')
+        .raw(
+            'CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , name TEXT, age INTEGER, is_student INTEGER, du_lieu BLOB)')
         .build();
-    await SqliteCurdImpl().withTable(tableName).setText('name', 'Do Manh Tai').setInteger('age', 18).setBool('is_student', false).insert();
-   User? response =
-        await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id DESC').withConverter((json) => User.fromMap(json)).findOne();
+    Map<String, dynamic> s = {'s1': '1', 's2': 2, 's3': false};
+    await SqliteCurdImpl()
+        .withTable(tableName)
+        .setText('name', 'Do Manh Tai')
+        .setInteger('age', 18)
+        .setBool('is_student', false)
+        .setBlob('du_lieu', s.toBytes)
+        .insert();
+    // await SqliteCurdImpl().mDatabase.insert(tableName, {'name': 'Do Manh Tai', 'is_student': 0,'du_lieu':s.toBytes });
 
-    print(response);
-  List<User>? responseMap = await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id ASC').withConverter<List<User>>((json) => json.map<User>((e)=> User.fromMap(e)).toList()).findAll();
-      print(responseMap);
+    // await SqliteCreatorImpl().raw('INSERT INTO users (name, age, is_student, du_lieu) VALUES (\'Do Manh Tai\', 18, 0, \'[1, 2, 3]\')').build();
+
+    //  User? response =
+    //       await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id DESC').withConverter((json) => User.fromMap(json)).findOne();
+
+    // print(response);
+        Map<String, dynamic> s2 = {'s1': 'update', 's2': 2, 's3': false};
+        await SqliteCurdImpl()
+        .withTable(tableName)
+        .setText('name', 'Do Manh Tai Update')
+        .setInteger('age', 18)
+        .setBool('is_student', false)
+        .setBlob('du_lieu', s2.toBytes)
+        .update();
+    List<Map>? responseMap = await SqliteCurdImpl().raw('SELECT * FROM $tableName ORDER BY id ASC').findAll();
+    print(responseMap);
+    print((responseMap?.first['du_lieu']).runtimeType);
+    print((responseMap?.first['du_lieu'] as Uint8List).string);
   }
 }

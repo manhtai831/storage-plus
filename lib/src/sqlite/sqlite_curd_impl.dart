@@ -15,6 +15,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   SqliteConverter? _converter;
 
   Database get _mDatabase => _database ?? DatabaseCreatorImpl().getDataBase();
+  Database get mDatabase => _database ?? DatabaseCreatorImpl().getDataBase();
 
   void _addData(String key, dynamic value) {
     _keys.add(key);
@@ -46,19 +47,19 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
 
   @override
   Future<void> insert() async {
-    String finalRaw = 'INSERT INTO $_tableName (${_keys.join(', ')}) VALUES (${_values.join(', ')})';
+    String finalRaw = 'INSERT INTO $_tableName (${_keys.join(', ')}) VALUES (${_keys.map((e) => '?').join(', ')})';
     _rawQuery.write(finalRaw);
-    _mDatabase.execute(_rawQuery.toString());
+    _mDatabase.rawInsert(_rawQuery.toString(),_values);
   }
 
   @override
   Future<void> update() async {
     List<String> dataSet = [];
     for (int i = 0; i < _keys.length; i++) {
-      dataSet.add('${_keys[i]} = ${_values[i]}');
+      dataSet.add('${_keys[i]} = ?');
     }
     _rawQuery.write('UPDATE $_tableName SET ${dataSet.join(', ')} ${_rawWhere.toString()}');
-    await _mDatabase.execute(_rawQuery.toString());
+    await _mDatabase.rawUpdate(_rawQuery.toString(),_values);
   }
 
   @override
