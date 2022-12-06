@@ -89,7 +89,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
 
   @override
   ISqliteIU setText(String key, String? value) {
-    _addData(key, '\'$value\'');
+    _addData(key, value);
     return this;
   }
 
