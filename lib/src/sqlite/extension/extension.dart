@@ -14,9 +14,13 @@ extension IntegerExtension on bool? {
 }
 
 extension Uint8ListExtension on Map<String, dynamic>? {
-  Uint8List get toBytes => Uint8List.fromList(jsonEncode(this).codeUnits);
+  Uint8List get toBytes => Uint8List.fromList(const Utf8Encoder().convert(jsonEncode(this)));
 }
 
 extension StringExtension on Uint8List? {
-  String get string => String.fromCharCodes(this ?? []);
+  String get string => const Utf8Decoder().convert(this ?? []);
+}
+
+extension MapExtension on Uint8List? {
+  Map<String, dynamic> get decode8List => jsonDecode(string);
 }
