@@ -18,6 +18,8 @@ class HiveCurdImpl extends IHiveCurd {
   Box? get collection => _collection;
 
   static void connect() => Hive.init('./local.data');
+  
+  static Future<void> connectFlutter() => Hive.initFlutter();
 
   static Future<void> create({String? name}) async {
     name ??= 'defaultBoxName';

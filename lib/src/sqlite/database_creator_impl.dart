@@ -25,8 +25,7 @@ class DatabaseCreatorImpl implements IDatabaseCreator {
     // var databasesPath = '../../sql_data';
 
     StringBuffer buffer = StringBuffer(databasesPath);
-    buffer.write('$name.db');
-    print(buffer.toString());
+    buffer.write('/$name.db');
 
     _mDatabases[name] = await openDatabase(buffer.toString(), version: 1, onDowngrade: onDowngrade, onUpgrade: onUpgrate);
   }
