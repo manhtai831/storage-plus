@@ -120,14 +120,14 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   @override
   Future<int> count() async {
     _rawQuery.write('SELECT COUNT(*) FROM $_tableName');
-    List<Map<String, Object?>> response = await _mDatabase.rawQuery(_rawQuery.toString());
+    List<Map<String, Object?>> response = await _mDatabase.rawQuery(_rawQuery.toString(),_values);
     return Sqflite.firstIntValue(response) ?? 0;
   }
 
   @override
   Future<bool> isExists() async {
     _rawQuery.write(_rawWhere.toString());
-    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString());
+    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString(),_values);
     Map<String, dynamic>? object = response.firstOrNull;
     return object != null;
   }
