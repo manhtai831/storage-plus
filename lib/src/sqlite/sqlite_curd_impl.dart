@@ -31,7 +31,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   @override
   Future<T?> findAll<T>() async {
     _rawQuery.write(_rawWhere.toString());
-    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString());
+    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString(),_values);
 
     return _converter?.call(response) ?? response;
   }
@@ -39,7 +39,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   @override
   Future<T?> findOne<T>() async {
     _rawQuery.write(_rawWhere.toString());
-    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString());
+    List<Map<String, dynamic>> response = await _mDatabase.rawQuery(_rawQuery.toString(),_values);
     Map<String, dynamic>? object = response.firstOrNull;
     if (object == null) return null;
     return _converter?.call(object) ?? object;
