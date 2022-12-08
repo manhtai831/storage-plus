@@ -5,7 +5,7 @@ import 'package:hive_storage/hive_storage.dart';
 import 'package:hive_storage/src/sqlite/interface/i_sqlite_curd.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
+class SqliteCurdImpl implements ISqliteCURD {
   final StringBuffer _rawQuery = StringBuffer();
   final StringBuffer _rawWhere = StringBuffer();
   final List<String> _keys = [];
@@ -63,56 +63,56 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   }
 
   @override
-  ISqliteIU setBlob(String key, Uint8List? value) {
+  ISqliteCURD setBlob(String key, Uint8List? value) {
     _addData(key, value);
     return this;
   }
 
   @override
-  ISqliteIU setBool(String key, bool? value) {
+  ISqliteCURD setBool(String key, bool? value) {
     int boolean = value == true ? 1 : 0;
     _addData(key, boolean);
     return this;
   }
 
   @override
-  ISqliteIU setInteger(String key, int? value) {
+  ISqliteCURD setInteger(String key, int? value) {
     _addData(key, value);
     return this;
   }
 
   @override
-  ISqliteIU setNum(String key, num? value) {
+  ISqliteCURD setNum(String key, num? value) {
     _addData(key, value);
     return this;
   }
 
   @override
-  ISqliteIU setText(String key, String? value) {
+  ISqliteCURD setText(String key, String? value) {
     _addData(key, value);
     return this;
   }
 
   @override
-  SqliteCurdImpl raw(String raw) {
+  ISqliteCURD raw(String raw) {
     _rawWhere.write(raw);
     return this;
   }
 
   @override
-  ISqliteRD withConverter<T>(SqliteConverter<T> converter) {
+  ISqliteCURD withConverter<T>(SqliteConverter<T> converter) {
     _converter = converter;
     return this;
   }
 
   @override
-  SqliteCurdImpl withDatabase({String? databaseName}) {
+  ISqliteCURD withDatabase({String? databaseName}) {
     _database = DatabaseCreatorImpl().getDataBase(name: databaseName);
     return this;
   }
 
   @override
-  SqliteCurdImpl withTable(String tableName) {
+  ISqliteCURD withTable(String tableName) {
     _tableName = tableName;
     return this;
   }
