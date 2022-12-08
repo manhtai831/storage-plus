@@ -25,7 +25,7 @@ class SqliteCurdImpl implements ISqliteIU, ISqliteRD, ISqliteRaw {
   @override
   Future<void> delete() async {
     _rawQuery.write('DELETE FROM $_tableName ${_rawWhere.toString()}');
-    await _mDatabase.execute(_rawQuery.toString());
+    await _mDatabase.rawDelete(_rawQuery.toString(),_values);
   }
 
   @override
